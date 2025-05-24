@@ -14,5 +14,5 @@ jobs:
 
       - name: Build and Push Docker Image
         run: |
-          docker build -t ghcr.io/YOUR_GITHUB_USERNAME/url-shortener:latest .
-          docker push ghcr.io/YOUR_GITHUB_USERNAME/url-shortener:latest
+          docker build -t ghcr.io/${{ secrets.GHCR_USERNAME }}/url-shortener:latest 
+          docker push ghcr.io/${{ secrets.GHCR_USERNAME }}/url-shortener:latest
