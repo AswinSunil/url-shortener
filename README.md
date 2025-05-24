@@ -69,6 +69,7 @@ url-shortener/
 ├── Dockerfile             # Docker image definition
 ├── package.json           # Node.js dependencies
 └── README.md              # Project description
+```
 
 Refer the project structure and add folders and files to your cloned local repo using VS code and commit each change to ensure that your cloned local repo and Github repo are in sync.
 Note: Always committing after each change is recommended in case you need to backtrack your project due to errors.
