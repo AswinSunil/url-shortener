@@ -75,4 +75,19 @@ Refer the project structure and add folders and files to your cloned local repo 
 Note: Always committing after each change is recommended in case you need to backtrack your project due to errors.
 
 Add code to each file and commit each change to your GitHub repo.
+_______________________________________________________________________________
 
+Generate Github tokens:
+
+Click Github Profile Icon -> Settings -> Developer Settings -> Personal Access Tokens (PAT) -> Classic Tokens -> Create new Classic Tokens
+Give note, expiration date and permissions for Repo, workflow and GHCR then click -> Generate Token
+
+To know the Github Username:
+
+Click on the Profile Icon, the top name is the Github Username.
+
+Go to the specific repo settings:
+secrets and variables -> Actions -> Secrets -> New repository secret
+Here add two secrets which are used in ci.yml workflow
+1. GHCR_USERNAME - paste the Github username as value of this secret
+2. TOKEN_GITHUB - paste the Github token as value of this secret
