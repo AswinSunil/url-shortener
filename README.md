@@ -55,6 +55,7 @@ _______________________________________________________________________________
 
 Project Directory Structure:
 
+```text
 url-shortener/
 ├── .github/                     
 │   └── workflows/
