@@ -12,18 +12,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      # NEW: Convert username and repo name to lowercase
-      - name: Set lowercase repo info
-        run: |
-          echo "USERNAME_LC=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-          echo "REPO_LC=$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
       # UPDATED: Use lowercase username
       - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${USERNAME_LC}" --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "devjane" --password-stdin
 
       # UPDATED: Use lowercase repo and username in Docker tag
       - name: Build and Push Docker Image
         run: |
-          docker build -t ghcr.io/${USERNAME_LC}/${REPO_LC}:latest .
-          docker push ghcr.io/${USERNAME_LC}/${REPO_LC}:latest
+          docker build -t ghcr.io/aswinsunil/url-shortener:latest .
+          docker push ghcr.io/aswinsunil/url-shortener:latest
+
+          
