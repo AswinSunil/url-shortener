@@ -38,3 +38,20 @@ jobs:
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl rollout restart deployment/url-shortener
+
+      - name: Port-forward and test the URL shortener API
+        run: |
+          # Port-forward the service or deployment
+          kubectl port-forward deployment/url-shortener 3000:3000 &
+          sleep 5  # Wait for the port-forward to be ready
+
+          echo "Testing whether long URL converts into Short URL "
+          curl -s -X POST http://localhost:3000/shorten \
+            -H "Content-Type: application/json" \
+            -d '{"url": "https://thisisthelongurl.com"}' > response.json
+
+          cat response.json
+          SHORT_URL=$(jq -r '.short_url' response.json)
+
+          echo "Testing GET to short URL: $SHORT_URL"
+          curl -v "$SHORT_URL"
