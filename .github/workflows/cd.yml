@@ -13,26 +13,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Install kubectl
-        run: |
-          curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-          chmod +x kubectl
-          sudo mv kubectl /usr/local/bin/
-
-      - name: Install Minikube
-        run: |
-          curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
-          chmod +x minikube
-          sudo mv minikube /usr/local/bin/
-
-      - name: Start Minikube with Docker Driver
-        run: |
-          sudo minikube start --driver=docker
-          minikube status
-
-      - name: Set kubectl context to Minikube
-        run: |
-          kubectl config use-context minikube
+      - name: Setup Minikube
+        uses: medyagh/setup-minikube@master # This action installs both Minikube and kubectl, starts minikube using docker driver and sets the kubectl context
+        with:
+          kubernetes-version: 'v1.27.x' # Specify a stable Kubernetes version you prefer
 
       - name: Apply Kubernetes Manifests
         run: |
