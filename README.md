@@ -16,27 +16,11 @@ Requirements:
 1. A github account and Repo
 2. VS Code installed on laptop
 3. Git installed on laptop
-4. Docker Desktop installed on laptop
-5. Kubeclt installed on laptop
-6. Minikube installed on laptop
 _______________________________________________________________________________
 
 Install VS code using exe file
+
 Install Git using exe file
-Install Docker Desktop using exe file
-
-Before Installing Docker Desktop WSL Hypervisor must be installed and virtualization must be enabled in Bios.
-Install WSL using powershell command: wsl --install
-
-Use curl command given in Kubernetes website to install kubectl
-Set kubectl as environment variable in Windows
-
-Use curl command to install Minikube
-Set Minikube as environment variable in Windows
-
-Use the command minikube start --driver=docker to start minikube.
-This is the command that initiates the Minikube cluster startup. Specifying --driver=docker instructs Minikube to use Docker Desktop (which must be running) as the underlying virtualization technology to host the Kubernetes cluster.
-_______________________________________________________________________________
 
 Create a new repo in GitHub called url-shortener
 
@@ -50,7 +34,9 @@ The above command will do three of the following:
 3. Clone the respective Github Repo to our laptop.
 Note: The cloned Github Repo by defaut will be present in C:\Users\username\github_repo_name; this repo will be empty because we still have not added the code.
 
-Using the VS code terminal configure your username and mail_id which will be visible during commit views.
+Using the VS code terminal configure your username and mail_id which will be visible during commit views:
+git config --global user.name "Your Name"
+git config --global user.email "your-email@example.com"
 _______________________________________________________________________________
 
 Project Directory Structure:
@@ -60,7 +46,6 @@ url-shortener/
 ├── .github/                     
 │   └── workflows/
 │       ├── ci.yml         # CI pipeline (build & push Docker image to GHCR)
-│       └── cd.yml         # CD pipeline (deploy to Minikube)
 ├── k8s/
 │   ├── deployment.yaml    # Deployment resource manifest
 │   └── service.yaml       # Service resource manifest for the above deployment
@@ -85,29 +70,14 @@ Give note, expiration date and permissions for Repo, workflow and GHCR then clic
 To know the Github Username:
 
 Click on the Profile Icon, the top name is the Github Username.
+Github username is not case sensitive which means devsunil and DevSunil will be considered same.
 
 Go to the specific repo settings:
 secrets and variables -> Actions -> Secrets -> New repository secret
-Here add two secrets which are used in ci.yml workflow
-1. GHCR_USERNAME - paste the Github username as value of this secret
-2. TOKEN_GITHUB - paste the Github token as value of this secret
+Here add one secret which will be used in ci/cd.yml workflow
 
-_______________________________________________________________________________
+TOKEN_GITHUB - paste the Github token as value of this secret
+______________________________________________________________________________
 
-In order to connect Github Actions with Minikube Cluster we must send the kubeconfig file of our Minikube Cluster to Github Actions, this can be done by following the below steps:
-
-1. Since kubeconfig file consists of sensitive credentials about our cluster we must give it to Github Actions as a secret. Since GitHub Secrets do not support multiline values, we need to Base64 encode it. 
-
-[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes((Get-Content -Raw "$env:USERPROFILE\.kube\config")))
-Note: By default this is where kubeconfig of Minikube cluster is stored.
-
-This command will give the string of encoded kubeconfig file.
-
-2. Create a new repo level secret called KUBE_CONFIG_DATA and in its value paste the string of encoded kubeconfig file.
-
-What is a kubeconfig file?
-
-A kubeconfig file (often found at ~/.kube/config on Linux/macOS or C:\Users\YourUser\.kube\config on Windows) is a YAML file that contains configuration information necessary for kubectl (and other Kubernetes tools) to connect to and authenticate with one or more Kubernetes clusters.
-
-Think of it as the "address book and credentials" for your Kubernetes clusters.
-_______________________________________________________________________________
+Notes:
+    1. By default the image pushed to GHCR is in private 
