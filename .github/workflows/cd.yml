@@ -13,10 +13,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Setup Minikube
-        uses: medyagh/setup-minikube@master # This action installs both Minikube and kubectl, starts minikube using docker driver and sets the kubectl context
-        with:
-          kubernetes-version: 'v1.33.1' # Specify a stable Kubernetes version you prefer
+      - name: Set up kind cluster
+        uses: engineerd/setup-kind@v0.5.0
+
+      - name: Create kind cluster
+        run: kind create cluster
+
+      - name: Load Docker image into kind
+        run: kind load docker-image ghcr.io/aswinsunil/url-shortener:latest
 
       - name: Apply Kubernetes Manifests
         run: |
