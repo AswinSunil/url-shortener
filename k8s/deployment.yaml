@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: url-shortener
-          image: ghcr.io/YOUR_GITHUB_USERNAME/url-shortener:latest
+          image: ghcr.io/${{ secrets.GHCR_USERNAME }}/url-shortener:latest
           ports:
             - containerPort: 3000
           imagePullPolicy: Always
