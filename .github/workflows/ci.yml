@@ -40,8 +40,8 @@ jobs:
           kubectl apply -f k8s/service.yaml
           kubectl rollout restart deployment/url-shortener
 
-          echo "Giving application time to start..."
-          sleep 20
+      - name: Wait for Pod to be Ready
+        run: kubectl wait --for=condition=ready pod -l app=url-shortener --timeout=90s
 
       - name: Install jq
         run: sudo apt-get install -y jq
