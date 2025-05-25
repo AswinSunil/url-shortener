@@ -1,7 +1,7 @@
 name: CI - Build & Push Docker Image
 on:
   workflow_dispatch:
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -9,10 +9,18 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u USERNAME --password-stdin
+      # NEW: Convert username and repo name to lowercase
+      - name: Set lowercase repo info
+        run: |
+          echo "USERNAME_LC=$(echo '${{ github.repository_owner }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "REPO_LC=$(echo '${{ github.event.repository.name }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
+      # UPDATED: Use lowercase username
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${USERNAME_LC}" --password-stdin
+
+      # UPDATED: Use lowercase repo and username in Docker tag
       - name: Build and Push Docker Image
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/url-shortener:latest .
-          docker push ghcr.io/${{ github.repository }}/url-shortener:latest
+          docker build -t ghcr.io/${USERNAME_LC}/${REPO_LC}:latest .
+          docker push ghcr.io/${USERNAME_LC}/${REPO_LC}:latest
