@@ -1,11 +1,14 @@
 name: CD - Deploy to Minikube
 on:
-  push:
-    branches:
-      - main
+  workflow_run:
+    workflows: ["CI - Build & Push Docker Image"] # Use the 'name' from ci.yml
+    types:
+      - completed # This means 'cd.yml' will only run after 'ci.yml' finishes
+
 jobs:
   deploy:
     runs-on: self-hosted
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Apply Kubernetes Manifests
         run: |
