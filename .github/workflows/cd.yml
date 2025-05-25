@@ -16,8 +16,11 @@ jobs:
       - name: Set up kind cluster
         uses: engineerd/setup-kind@v0.6.2
 
+      - name: Delete existing kind cluster
+        run: kind delete cluster --name kind || true
+
       - name: Create kind cluster
-        run: kind create cluster
+        run: kind create cluster --name kind --wait 5m
 
       - name: Load Docker image into kind
         run: kind load docker-image ghcr.io/aswinsunil/url-shortener:latest
