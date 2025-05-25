@@ -21,7 +21,11 @@ jobs:
       - name: Apply Kubernetes Manifests
         run: |
           kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
           kubectl rollout restart deployment/url-shortener
+
+          echo "Giving application a moment to fully start up after rollout..."
+          sleep 20 # Add a sleep here (e.g., 15-20 seconds) as an extra buffer
 
       - name: Port-forward and test the URL shortener API
         run: |
