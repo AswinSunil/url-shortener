@@ -5,6 +5,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read  # Allows checking out the code
+      packages: write # <-- THIS IS CRUCIAL for pushing to GHCR
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
