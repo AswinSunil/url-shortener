@@ -91,3 +91,23 @@ secrets and variables -> Actions -> Secrets -> New repository secret
 Here add two secrets which are used in ci.yml workflow
 1. GHCR_USERNAME - paste the Github username as value of this secret
 2. TOKEN_GITHUB - paste the Github token as value of this secret
+
+_______________________________________________________________________________
+
+In order to connect Github Actions with Minikube Cluster we must send the kubeconfig file of our Minikube Cluster to Github Actions, this can be done by following the below steps:
+
+1. Since kubeconfig file consists of sensitive credentials about our cluster we must give it to Github Actions as a secret. Since GitHub Secrets do not support multiline values, we need to Base64 encode it. 
+
+[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes((Get-Content -Raw "$env:USERPROFILE\.kube\config")))
+Note: By default this is where kubeconfig of Minikube cluster is stored.
+
+This command will give the string of encoded kubeconfig file.
+
+2. Create a new repo level secret called KUBE_CONFIG_DATA and in its value paste the string of encoded kubeconfig file.
+
+What is a kubeconfig file?
+
+A kubeconfig file (often found at ~/.kube/config on Linux/macOS or C:\Users\YourUser\.kube\config on Windows) is a YAML file that contains configuration information necessary for kubectl (and other Kubernetes tools) to connect to and authenticate with one or more Kubernetes clusters.
+
+Think of it as the "address book and credentials" for your Kubernetes clusters.
+_______________________________________________________________________________
