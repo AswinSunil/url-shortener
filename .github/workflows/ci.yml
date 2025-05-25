@@ -14,7 +14,7 @@ jobs:
 
       # UPDATED: Use lowercase username
       - name: Log in to GitHub Container Registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "devjane" --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "aswinsunil" --password-stdin
 
       # UPDATED: Use lowercase repo and username in Docker tag
       - name: Build and Push Docker Image
