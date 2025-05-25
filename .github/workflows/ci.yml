@@ -1,4 +1,4 @@
-name: CI - Build & Push Docker Image
+name: Build, Push Docker Image and Deploy 
 on:
   workflow_dispatch:
 
@@ -6,20 +6,58 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: read  # Allows checking out the code
-      packages: write # <-- THIS IS CRUCIAL for pushing to GHCR
+      contents: read
+      packages: write
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
 
-      # UPDATED: Use lowercase username
+      - name: Set up kind cluster
+        uses: engineerd/setup-kind@v0.6.2
+
+      - name: Delete existing kind cluster (if any)
+        run: kind delete cluster --name kind || true
+
+      - name: Create kind cluster
+        run: kind create cluster --name kind --wait 5m
+
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "aswinsunil" --password-stdin
 
-      # UPDATED: Use lowercase repo and username in Docker tag
-      - name: Build and Push Docker Image
-        run: |
-          docker build -t ghcr.io/aswinsunil/url-shortener:latest .
-          docker push ghcr.io/aswinsunil/url-shortener:latest
+      - name: Build Docker Image locally
+        run: docker build -t ghcr.io/aswinsunil/url-shortener:latest .
 
-          
+      - name: Load Docker Image into kind cluster
+        run: kind load docker-image ghcr.io/aswinsunil/url-shortener:latest
+
+      - name: Push Docker Image to GHCR
+        run: docker push ghcr.io/aswinsunil/url-shortener:latest
+
+      - name: Apply Kubernetes Manifests
+        run: |
+          kubectl apply -f k8s/deployment.yaml
+          kubectl apply -f k8s/service.yaml
+          kubectl rollout restart deployment/url-shortener
+
+          echo "Giving application time to start..."
+          sleep 20
+
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Port-forward and test the URL shortener API
+        run: |
+          kubectl port-forward deployment/url-shortener 3000:3000 &
+          sleep 10  # Give port-forward some time
+
+          echo "Testing whether long URL converts into Short URL "
+          curl -s -X POST http://localhost:3000/shorten \
+            -H "Content-Type: application/json" \
+            -d '{"url": "https://thisisthelongurl.com"}' > response.json
+
+          cat response.json
+          SHORT_URL=$(jq -r '.short_url' response.json)
+
+          echo "Testing GET to short URL: $SHORT_URL"
+          curl -v "$SHORT_URL"
