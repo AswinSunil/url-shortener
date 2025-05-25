@@ -17,5 +17,5 @@ spec:
           image: ghcr.io/aswinsunil/url-shortener:latest
           ports:
             - containerPort: 3000
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
 
