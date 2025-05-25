@@ -1,22 +1,38 @@
 name: CD - Deploy to Minikube
 on:
   workflow_run:
-    workflows: ["CI - Build & Push Docker Image"] # Use the 'name' from ci.yml
+    workflows: ["CI - Build & Push Docker Image"]
     types:
-      - completed # This means 'cd.yml' will only run after 'ci.yml' finishes
+      - completed
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set Up Kubeconfig
+      - name: Install kubectl
         run: |
-          echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > ~/.kube/config
-          kubectl config set-context minikube
+          curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+          chmod +x kubectl
+          sudo mv kubectl /usr/local/bin/
+
+      - name: Install Minikube
+        run: |
+          curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          chmod +x minikube
+          sudo mv minikube /usr/local/bin/
+
+      - name: Start Minikube with Docker Driver
+        run: |
+          sudo minikube start --driver=docker
+          minikube status
+
+      - name: Set kubectl context to Minikube
+        run: |
+          kubectl config use-context minikube
 
       - name: Apply Kubernetes Manifests
         run: |
