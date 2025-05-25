@@ -16,7 +16,7 @@ jobs:
       - name: Setup Minikube
         uses: medyagh/setup-minikube@master # This action installs both Minikube and kubectl, starts minikube using docker driver and sets the kubectl context
         with:
-          kubernetes-version: 'v1.27.x' # Specify a stable Kubernetes version you prefer
+          kubernetes-version: 'v1.33.1' # Specify a stable Kubernetes version you prefer
 
       - name: Apply Kubernetes Manifests
         run: |
