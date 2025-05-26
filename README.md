@@ -15,7 +15,7 @@ The above Application is deployed in the kind cluster running on the github runn
 Requirements:
 1. A github account
 2. VS Code - install it from the Appstore
-3. Git - install using the command sudo apt install git
+3. Git - install using the command sudo apt install git in your laptop terminal.
 _______________________________________________________________________________
 
 Create a new repo in GitHub called url-shortener using the github website.
