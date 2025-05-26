@@ -23,7 +23,7 @@ Create a new repo in GitHub called url-shortener using the github website.
 In vs code, click view->terminal and enter the command git clone https://github.com/AswinSunil/url-shortener (link of the repo we created above)
 
 The above command will ask for your github username and password. Enter your username but do not enter password instead use your github token as password.
-
+By default the image pushed to GHCR is in private 
 Generate Github tokens:
 
 Click Github Profile Icon -> Settings -> Developer Settings -> Personal Access Tokens (PAT) -> Classic Tokens -> Create new Classic Tokens Give note, expiration date and permissions for Repo, workflow and GHCR then click -> Generate Token
@@ -40,6 +40,10 @@ Before committing we must set our name and mailid in vs code so that git will kn
 
 git config --global user.name "Your Name"
 git config --global user.email "your-email@example.com"
+
+While committing for first time vs code will automatically install git extension to connect our local repo with online repo. Just give the necessay permissions in the pop-up that appears.
+
+Also if you are storing workflows in the repo vs code will automactically install githubactions extension just give the necessary permissions in the pop-up that appears.
 _______________________________________________________________________________
 
 Project Directory Structure:
@@ -58,29 +62,13 @@ url-shortener/
 ├── package.json           # Node.js dependencies
 └── README.md              # Project description
 ```
-
-Refer the project structure and add folders and files to your cloned local repo using VS code and commit each change to ensure that your cloned local repo and Github repo are in sync.
-Note: Always committing after each change is recommended in case you need to backtrack your project due to errors.
-
-Add code to each file and commit each change to your GitHub repo.
 _______________________________________________________________________________
 
-Generate Github tokens:
+Since the workflow is set to trigger manually go to your online repo->actions tab-> click the Build, Push Docker Image and Deploy action and click on run workflow. What this workflow will do:
 
-Click Github Profile Icon -> Settings -> Developer Settings -> Personal Access Tokens (PAT) -> Classic Tokens -> Create new Classic Tokens
-Give note, expiration date and permissions for Repo, workflow and GHCR then click -> Generate Token
-
-To know the Github Username:
-
-Click on the Profile Icon, the top name is the Github Username.
-Github username is not case sensitive which means devsunil and DevSunil will be considered same.
-
-Go to the specific repo settings:
-secrets and variables -> Actions -> Secrets -> New repository secret
-Here add one secret which will be used in ci/cd.yml workflow
-
-TOKEN_GITHUB - paste the Github token as value of this secret
-______________________________________________________________________________
-
-Notes:
-    1. By default the image pushed to GHCR is in private 
+1. create a kind cluster
+2. Build a docker image from the docker file we provided
+3. The docker image created above is pushed to our GHCR. Note: By default the image pushed to GHCR is in private,change it to public
+4. In the kind kubernetes cluster we created a deployment and its service is applied. This deployment uses the above image pulled from GHCR
+5. A simple POST request is sent to the application using curl for testing purpose.
+_______________________________________________________________________________
