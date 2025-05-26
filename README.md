@@ -10,31 +10,34 @@ The need for a URL shortener arises from several practical problems that long, c
 In this Application, the request from client is sent using POST, and the application responds with a JSON object.
 _______________________________________________________________________________
 
-The above Application is deployed in Minikube running on a windows laptop.
+The above Application is deployed in the kind cluster running on the github runner.
 
 Requirements:
-1. A github account and Repo
-2. VS Code installed on laptop
-3. Git installed on laptop
+1. A github account
+2. VS Code - install it from the Appstore
+3. Git - install using the command sudo apt install git
 _______________________________________________________________________________
 
-Install VS code using exe file
+Create a new repo in GitHub called url-shortener using the github website.
 
-Install Git using exe file
+In vs code, click view->terminal and enter the command git clone https://github.com/AswinSunil/url-shortener (link of the repo we created above)
 
-Create a new repo in GitHub called url-shortener
+The above command will ask for your github username and password. Enter your username but do not enter password instead use your github token as password.
 
-vs code -> view -> terminal
-In the terminal enter the following command:
-git clone linkofyourgithubrepo
+Generate Github tokens:
 
-The above command will do three of the following:
-1. Connect Git installed on the laptop to VS Code
-2. Through Plugin connect VS code and the respective Github Repo
-3. Clone the respective Github Repo to our laptop.
-Note: The cloned Github Repo by defaut will be present in C:\Users\username\github_repo_name; this repo will be empty because we still have not added the code.
+Click Github Profile Icon -> Settings -> Developer Settings -> Personal Access Tokens (PAT) -> Classic Tokens -> Create new Classic Tokens Give note, expiration date and permissions for Repo, workflow and GHCR then click -> Generate Token
 
-Using the VS code terminal configure your username and mail_id which will be visible during commit views:
+To know the Github Username:
+
+Click on the Profile Icon, the top name is the Github Username. Github username is not case sensitive which means devsunil and DevSunil will be considered same.
+
+After entering username and password repo will be cloned locally.
+
+In vs code, file -> open folder and select the repo which we cloned. The repo will be empty so add sub directories, files and codes as needed. Note: After each addition, change, etc. save and commit so that the changes will be pushed from the local repo to online repo.
+
+Before committing we must set our name and mailid in vs code so that git will know who pushed the changes and committed:
+
 git config --global user.name "Your Name"
 git config --global user.email "your-email@example.com"
 _______________________________________________________________________________
