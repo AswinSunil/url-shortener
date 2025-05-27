@@ -71,4 +71,6 @@ Since the workflow is set to trigger manually go to your online repo->actions ta
 3. The docker image created above is pushed to our GHCR. Note: By default the image pushed to GHCR is in private,change it to public
 4. In the kind kubernetes cluster we created a deployment and its service is applied. This deployment uses the above image pulled from GHCR
 5. A simple POST request is sent to the application using curl for testing purpose.
+
+![](Output-images/Screenshot_1.png)
 _______________________________________________________________________________
